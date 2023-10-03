@@ -1,0 +1,61 @@
+Optiver - Trading at the Close
+Predict US stocks closing movements
+
+Overview
+------------------
+In this competition, you are challenged to develop a model capable of predicting the closing price movements for hundreds of Nasdaq listed stocks using data from the order book and the closing auction of the stock. Information from the auction can be used to adjust prices, assess supply and demand dynamics, and identify trading opportunities.
+
+Description
+------------------
+Stock exchanges are fast-paced, high-stakes environments where every second counts. The intensity escalates as the trading day approaches its end, peaking in the critical final ten minutes. These moments, often characterised by heightened volatility and rapid price fluctuations, play a pivotal role in shaping the global economic narrative for the day.
+
+Each trading day on the Nasdaq Stock Exchange concludes with the Nasdaq Closing Cross auction. This process establishes the official closing prices for securities listed on the exchange. These closing prices serve as key indicators for investors, analysts and other market participants in evaluating the performance of individual securities and the market as a whole.
+
+Within this complex financial landscape operates Optiver, a leading global electronic market maker. Fueled by technological innovation, Optiver trades a vast array of financial instruments, such as derivatives, cash equities, ETFs, bonds, and foreign currencies, offering competitive, two-sided prices for thousands of these instruments on major exchanges worldwide.
+
+In the last ten minutes of the Nasdaq exchange trading session, market makers like Optiver merge traditional order book data with auction book data. This ability to consolidate information from both sources is critical for providing the best prices to all market participants.
+
+In this competition, you are challenged to develop a model capable of predicting the closing price movements for hundreds of Nasdaq listed stocks using data from the order book and the closing auction of the stock. Information from the auction can be used to adjust prices, assess supply and demand dynamics, and identify trading opportunities.
+
+Your model can contribute to the consolidation of signals from the auction and order book, leading to improved market efficiency and accessibility, particularly during the intense final ten minutes of trading. You'll also get firsthand experience in handling real-world data science problems, similar to those faced by traders, quantitative researchers and engineers at Optiver.
+
+Evaluation
+------------------
+Submissions are evaluated on the Mean Absolute Error (MAE) between the predicted return and the observed target. The formula is given by:
+MAE = \frac{1}{n} \sum\limits_{i=1}^{n} {|y_i - x_i|}
+
+Where:
+n is the total number of data points.
+y_i is the predicted value for data point i.
+x_i is the observed value for data point i.
+
+Dataset Description
+------------------
+This dataset contains historic data for the daily ten minute closing auction on the NASDAQ stock exchange. Your challenge is to predict the future price movements of stocks relative to the price future price movement of a synthetic index composed of NASDAQ-listed stocks.
+
+This is a forecasting competition using the time series API. The private leaderboard will be determined using real market data gathered after the submission period closes.
+
+Files
+[train/test].csv The auction data. The test data will be delivered by the API.
+
+stock_id - A unique identifier for the stock. Not all stock IDs exist in every time bucket.
+date_id - A unique identifier for the date. Date IDs are sequential & consistent across all stocks.
+imbalance_size - The amount unmatched at the current reference price (in USD).
+imbalance_buy_sell_flag - An indicator reflecting the direction of auction imbalance.
+buy-side imbalance; 1
+sell-side imbalance; -1
+no imbalance; 0
+reference_price - The price at which paired shares are maximized, the imbalance is minimized and the distance from the bid-ask midpoint is minimized, in that order. Can also be thought of as being equal to the near price bounded between the best bid and ask price.
+matched_size - The amount that can be matched at the current reference price (in USD).
+far_price - The crossing price that will maximize the number of shares matched based on auction interest only. This calculation excludes continuous market orders.
+near_price - The crossing price that will maximize the number of shares matched based auction and continuous market orders.
+[bid/ask]_price - Price of the most competitive buy/sell level in the non-auction book.
+[bid/ask]_size - The dollar notional amount on the most competitive buy/sell level in the non-auction book.
+wap - The weighted average price in the non-auction book.
+\frac{ {BidPrice * AskSize + AskPrice * BidSize}}{BidSize + AskSize}
+seconds_in_bucket - The number of seconds elapsed since the beginning of the day's closing auction, always starting from 0.
+target - The 60 second future move in the wap of the stock, less the 60 second future move of the synthetic index. Only provided for the train set.
+The synthetic index is a custom weighted index of Nasdaq-listed stocks constructed by Optiver for this competition.
+The unit of the target is basis points, which is a common unit of measurement in financial markets. A 1 basis point price move is equivalent to a 0.01% price move.
+Where t is the time at the current observation, we can define the target:
+Target = (\frac{StockWAP_{t+60}}{StockWAP_{t}} - \frac{IndexWAP_{t+60}}{IndexWAP_{t}}) * 10000
